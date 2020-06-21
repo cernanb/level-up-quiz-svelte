@@ -13,10 +13,6 @@
     return data;
   }
 
-  function handleClick() {
-    quiz = getQuizData();
-  }
-
   function nextQuestion() {
     activeQuestion += 1;
   }
@@ -24,18 +20,24 @@
   function incrementScore() {
     score += 1;
   }
+
+  function resetQuiz() {
+    score = 0;
+    activeQuestion = 0;
+    quiz = getQuizData();
+  }
 </script>
 
 <div>
   <h4>Score: {score}</h4>
   <h4>Question: {activeQuestion + 1}</h4>
-  <button on:click={handleClick}>Start New Quiz</button>
+  <button on:click={resetQuiz}>Start New Quiz</button>
   {#await quiz}
     <p>Loading</p>
   {:then data}
     {#each data.results as question, index}
       {#if index === activeQuestion}
-        <Question {question} {nextQuestion} {incrementScore} />
+        <Question {question} {nextQuestion} {incrementScore} {resetQuiz} />
       {/if}
     {/each}
   {/await}
