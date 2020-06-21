@@ -21,9 +21,7 @@
 <h3>
   {@html question.question}
 </h3>
-{#if result}
-  <h5>{result}</h5>
-{/if}
+
 {#each randomAnswers as answer}
   <button
     style="color: {answered ? (answer === question.correct_answer ? 'green' : 'red') : ''};"
