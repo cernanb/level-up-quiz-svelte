@@ -1,5 +1,6 @@
 <script>
   import Question from "./Question.svelte";
+  import { fade, blur, fly, slide, scale } from "svelte/transition";
   let activeQuestion = 0;
   let quiz = getQuizData();
   let score = 0;
@@ -28,6 +29,12 @@
   }
 </script>
 
+<style>
+  .fade-wrapper {
+    position: absolute;
+  }
+</style>
+
 <div>
   <h4>Score: {score}</h4>
   <h4>Question: {activeQuestion + 1}</h4>
@@ -37,7 +44,9 @@
   {:then data}
     {#each data.results as question, index}
       {#if index === activeQuestion}
-        <Question {question} {nextQuestion} {incrementScore} {resetQuiz} />
+        <div in:fly={{ y: 200 }} out:fly={{ x: -100 }} class="fade-wrapper">
+          <Question {question} {nextQuestion} {incrementScore} {resetQuiz} />
+        </div>
       {/if}
     {/each}
   {/await}
