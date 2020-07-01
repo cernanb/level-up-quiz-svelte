@@ -1,10 +1,12 @@
 <script>
   import Question from "./Question.svelte";
   import { fade, blur, fly, slide, scale } from "svelte/transition";
+  import Modal from "./Modal.svelte";
   import { onMount, beforeUpdate, afterUpdate } from "svelte";
   let activeQuestion = 0;
   let quiz = getQuizData();
   let score = 0;
+  let isModalOpen = false;
 
   onMount(() => {
     console.log("component mounted");
@@ -34,14 +36,14 @@
   }
 
   function resetQuiz() {
+    isModalOpen = false;
     score = 0;
     activeQuestion = 0;
     quiz = getQuizData();
   }
 
   $: if (score > 1) {
-    alert("You won!!!");
-    resetQuiz();
+    isModalOpen = true;
   }
 
   $: questionNumber = activeQuestion + 1;
@@ -69,3 +71,11 @@
     {/each}
   {/await}
 </div>
+
+{#if isModalOpen}
+  <Modal>
+    <h2>You won!</h2>
+    <p>Congratulations</p>
+    <button on:click={resetQuiz}>Start Over</button>
+  </Modal>
+{/if}
