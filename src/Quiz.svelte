@@ -1,16 +1,27 @@
 <script>
   import Question from "./Question.svelte";
   import { fade, blur, fly, slide, scale } from "svelte/transition";
+  import { onMount, beforeUpdate, afterUpdate } from "svelte";
   let activeQuestion = 0;
   let quiz = getQuizData();
   let score = 0;
+
+  onMount(() => {
+    console.log("component mounted");
+  });
+
+  beforeUpdate(() => {
+    console.log("the component will update");
+  });
+  afterUpdate(() => {
+    console.log("i updated");
+  });
 
   async function getQuizData() {
     const res = await fetch(
       "https://opentdb.com/api.php?amount=10&category=21&type=multiple"
     );
     const data = await res.json();
-    console.log(data);
     return data;
   }
 
@@ -27,6 +38,13 @@
     activeQuestion = 0;
     quiz = getQuizData();
   }
+
+  $: if (score > 1) {
+    alert("You won!!!");
+    resetQuiz();
+  }
+
+  $: questionNumber = activeQuestion + 1;
 </script>
 
 <style>
@@ -37,8 +55,8 @@
 
 <div>
   <h4>Score: {score}</h4>
-  <h4>Question: {activeQuestion + 1}</h4>
-  <button on:click={resetQuiz}>Start New Quiz</button>
+  <h4>Question: {questionNumber}</h4>
+  <button on:click|once={resetQuiz}>Start New Quiz</button>
   {#await quiz}
     <p>Loading</p>
   {:then data}
